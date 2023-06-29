@@ -74,7 +74,7 @@ pub fn list2(ld_dir: &PathBuf) -> Result<Vec<LdMnq>, LdError> {
             vbox_pid: x[6].parse::<i64>().unwrap_or(-1),
         })
         .collect::<Vec<LdMnq>>();
-    println!("{:#?}", data);
+    // println!("{:#?}", data);
     Ok(data)
 }
 
@@ -83,6 +83,18 @@ pub fn launch(ld_dir: &PathBuf, index: i32) -> Result<(), LdError> {
     let ld_console_path = get_ld_console_path(ld_dir);
     let output = std::process::Command::new(ld_console_path)
         .arg("launch")
+        .arg("--index")
+        .arg(index.to_string())
+        .output()?;
+    println!("{:#?}", output);
+    Ok(())
+}
+
+// 关闭雷电模拟器
+pub fn close(ld_dir: &PathBuf, index: i32) -> Result<(), LdError> {
+    let ld_console_path = get_ld_console_path(ld_dir);
+    let output = std::process::Command::new(ld_console_path)
+        .arg("quit")
         .arg("--index")
         .arg(index.to_string())
         .output()?;
@@ -104,5 +116,11 @@ mod tests {
     fn launch_test() {
         let ld_dir = PathBuf::from("C:\\leidian\\LDPlayer4");
         let _ = launch(&ld_dir, 0);
+    }
+
+    #[test]
+    fn close_test() {
+        let ld_dir = PathBuf::from("C:\\leidian\\LDPlayer4");
+        let _ = close(&ld_dir, 0);
     }
 }
